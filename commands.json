@@ -1,0 +1,473 @@
+[
+  {
+    "schema_version": "1.0.0",
+    "id": "eli10",
+    "version": "0.2.0",
+    "name": "ELI10",
+    "status": "draft",
+    "origin": "sabrina_derived",
+    "source": {
+      "original_name": "ELI10",
+      "original_wording": "ELI10 - instant simple explanations",
+      "primary_source": "https://substack.com/@sabrinaramonov/note/c-260729855",
+      "source_date": null,
+      "catalog_record": "catalog/sabrina/commands/eli10-1.0.0.json",
+      "confidence": "primary_verified",
+      "confidence_reason": "Primary author-account wording checked; see catalog/sabrina/sources/sabrina-substack-c-260729855.json for retrieval timestamp, precise locator and displayed partial date. Publication year remains unknown. Product instructions are our expansion, not a quotation."
+    },
+    "product_interpretation": "Explain complicated material in language a ten-year-old could follow.",
+    "changes": "Simplifies language, structure and explanations.",
+    "preserves": "Core facts, uncertainty and necessary distinctions.",
+    "inputs": {
+      "required": [
+        "material"
+      ],
+      "optional": [
+        "audience",
+        "goal"
+      ]
+    },
+    "expanded_instruction": "Explain the supplied working material in clear, age-appropriate everyday language for a ten-year-old unless another audience is supplied. Define essential terms and use a concrete example or clearly labeled analogy when helpful. Preserve factual meaning, uncertainty, and important exceptions. Do not invent supporting facts, patronize the reader, or turn an analogy into a literal claim. If the input is unclear, identify the ambiguity rather than quietly resolving it. Return the simplified explanation.",
+    "stack": {
+      "role": "transform",
+      "consumes": "working_material",
+      "output": "transformed_material",
+      "compatible_with": [
+        "human",
+        "redteam",
+        "verify",
+        "audit",
+        "specificity",
+        "firstprinciples",
+        "contrastmode"
+      ]
+    },
+    "testing": {
+      "status": "untested",
+      "evidence": [],
+      "note": "Draft product interpretation only. No model execution, human effectiveness review, or comparative testing performed."
+    },
+    "category": "Write & clarify"
+  },
+  {
+    "schema_version": "1.0.0",
+    "id": "human",
+    "version": "0.2.0",
+    "name": "/human",
+    "status": "draft",
+    "origin": "sabrina_derived",
+    "source": {
+      "original_name": "/human",
+      "original_wording": "/human - Makes your output sound like a real human wrote it",
+      "primary_source": "https://substack.com/@sabrinaramonov/note/c-288928777",
+      "source_date": null,
+      "catalog_record": "catalog/sabrina/commands/human-1.0.0.json",
+      "confidence": "primary_verified",
+      "confidence_reason": "Primary author-account wording checked; see catalog/sabrina/sources/sabrina-substack-c-288928777.json for retrieval timestamp, precise locator and displayed partial date. Publication year remains unknown. Product instructions are our expansion, not a quotation."
+    },
+    "product_interpretation": "Rewrite supplied text to sound natural and appropriate for its audience.",
+    "changes": "Improves flow, phrasing and tone.",
+    "preserves": "Meaning, factual claims, commitments, citations and qualifications.",
+    "inputs": {
+      "required": [
+        "material"
+      ],
+      "optional": [
+        "audience",
+        "tone",
+        "constraints"
+      ]
+    },
+    "expanded_instruction": "Rewrite the supplied working material in natural, clear language. Follow any supplied audience, tone and constraints; otherwise use a warm, direct style. Preserve meaning, facts, cited support and uncertainty. Remove generic filler and unnecessary stiffness without adding opinions, personal experience, endorsements or new promises. Do not claim human authorship or promise to evade AI detection. Return the rewritten material.",
+    "stack": {
+      "role": "transform",
+      "consumes": "working_material",
+      "output": "transformed_material",
+      "compatible_with": [
+        "eli10",
+        "redteam",
+        "verify",
+        "audit",
+        "specificity",
+        "firstprinciples",
+        "contrastmode"
+      ]
+    },
+    "testing": {
+      "status": "untested",
+      "evidence": [],
+      "note": "Draft product interpretation only. No model execution, human effectiveness review, or comparative testing performed."
+    },
+    "category": "Write & clarify"
+  },
+  {
+    "schema_version": "1.0.0",
+    "id": "redteam",
+    "version": "0.2.0",
+    "name": "REDTEAM",
+    "status": "draft",
+    "origin": "sabrina_derived",
+    "source": {
+      "original_name": "REDTEAM",
+      "original_wording": "REDTEAM - forces ChatGPT to show you why you're wrong. Kills the yes-man reflex.",
+      "primary_source": "https://substack.com/@sabrinaramonov/note/c-259403450",
+      "source_date": null,
+      "catalog_record": "catalog/sabrina/commands/redteam-1.0.0.json",
+      "confidence": "primary_verified",
+      "confidence_reason": "Primary author-account wording checked; see catalog/sabrina/sources/sabrina-substack-c-259403450.json for retrieval timestamp, precise locator and displayed partial date. Publication year remains unknown. Product instructions are our expansion, not a quotation."
+    },
+    "product_interpretation": "Challenge a proposal to expose plausible weaknesses before action.",
+    "changes": "Adds adversarial review, failure scenarios and mitigations.",
+    "preserves": "The original proposal and the distinction between evidence and hypotheses.",
+    "inputs": {
+      "required": [
+        "material"
+      ],
+      "optional": [
+        "goal",
+        "constraints",
+        "evidence"
+      ]
+    },
+    "expanded_instruction": "Review the supplied working material as a skeptical but constructive challenger. Identify its objective, key assumptions and plausible failure modes. Prioritize weaknesses by consequence and explain the conditions under which each could occur. Distinguish evidence-backed problems from hypothetical risks; do not invent facts or force criticism when the material is sound. Include useful counterarguments, mitigations, and checks that could disconfirm each major concern. Return a concise review report with severity, rationale and suggested action, not a replacement proposal.",
+    "stack": {
+      "role": "review",
+      "consumes": "working_material",
+      "output": "review_report",
+      "compatible_with": [
+        "eli10",
+        "human",
+        "verify",
+        "audit",
+        "specificity",
+        "firstprinciples",
+        "contrastmode"
+      ]
+    },
+    "testing": {
+      "status": "untested",
+      "evidence": [],
+      "note": "Draft product interpretation only. No model execution, human effectiveness review, or comparative testing performed."
+    },
+    "category": "Review & check"
+  },
+  {
+    "schema_version": "1.0.0",
+    "id": "verify",
+    "version": "0.2.0",
+    "name": "/VERIFY",
+    "status": "draft",
+    "origin": "david_specific",
+    "source": {
+      "original_name": "/VERIFY",
+      "original_wording": null,
+      "primary_source": "catalog/david/sources/original-discussion-attestation-2026-09-09.json",
+      "source_date": null,
+      "catalog_record": null,
+      "confidence": "primary_verified",
+      "confidence_reason": "David directly attests in the current conversation that he introduced this command in the original AI Command Center discussion. Confidence applies to this user attestation only. Original discussion date and exact original instructions are unavailable; expanded_instruction remains our product draft."
+    },
+    "product_interpretation": "Check claims against available evidence and identify what remains unverified.",
+    "changes": "Adds claim-level evidence assessment and explicit verification gaps.",
+    "preserves": "Original claims and distinctions between supported, contradicted and unresolved information.",
+    "inputs": {
+      "required": [
+        "material"
+      ],
+      "optional": [
+        "evidence",
+        "as_of_date",
+        "goal"
+      ]
+    },
+    "expanded_instruction": "Extract the material claims from the supplied working material and check them against supplied evidence or sources you actually access. Do not imply that browsing, source retrieval or external verification occurred unless it did. A URL without accessible content is not checked evidence. For each material claim, report supported by available evidence, contradicted by available evidence, or unresolved; give the exact supporting source/locator when available and explain its relevance and limits. Supplied evidence may itself be wrong: distinguish agreement with it from independently established truth. Note date sensitivity and conflicting sources. Without sufficient evidence, state what is missing and the next check needed. Never invent citations or substitute model confidence for verification. Return a claim/evidence/status report with a short summary of unresolved claims.",
+    "stack": {
+      "role": "review",
+      "consumes": "working_material",
+      "output": "review_report",
+      "compatible_with": [
+        "eli10",
+        "human",
+        "redteam",
+        "audit",
+        "specificity",
+        "firstprinciples",
+        "contrastmode"
+      ]
+    },
+    "testing": {
+      "status": "untested",
+      "evidence": [],
+      "note": "Draft product interpretation only. No model execution, human effectiveness review, or comparative testing performed."
+    },
+    "category": "Review & check"
+  },
+  {
+    "schema_version": "1.0.0",
+    "id": "audit",
+    "version": "0.2.0",
+    "name": "/AUDIT",
+    "status": "draft",
+    "origin": "david_specific",
+    "source": {
+      "original_name": "/AUDIT",
+      "original_wording": null,
+      "primary_source": "catalog/david/sources/original-discussion-attestation-2026-09-09.json",
+      "source_date": null,
+      "catalog_record": null,
+      "confidence": "primary_verified",
+      "confidence_reason": "David directly attests in the current conversation that he introduced this command in the original AI Command Center discussion. Confidence applies to this user attestation only. Original discussion date and exact original instructions are unavailable; expanded_instruction remains our product draft."
+    },
+    "product_interpretation": "Review material against explicit requirements and identify traceable gaps.",
+    "changes": "Adds a structured requirements and consistency review.",
+    "preserves": "The reviewed material and the boundary between findings and assumptions.",
+    "inputs": {
+      "required": [
+        "material"
+      ],
+      "optional": [
+        "criteria",
+        "goal",
+        "evidence"
+      ]
+    },
+    "expanded_instruction": "Audit the supplied working material against the user's stated criteria and constraints. If none are supplied, explicitly use a limited default review for clarity, completeness, internal consistency, unsupported claims, and actionability; do not invent domain-specific compliance standards. For each finding, cite the relevant passage or location, identify the unmet criterion, explain the impact and propose a concrete correction. Distinguish observed defects, uncertain concerns and criteria that cannot be assessed. Report criteria checked without findings as well as material gaps. Do not claim certification, external verification, or compliance beyond the evidence and scope. Return an audit report without silently editing the material.",
+    "stack": {
+      "role": "review",
+      "consumes": "working_material",
+      "output": "review_report",
+      "compatible_with": [
+        "eli10",
+        "human",
+        "redteam",
+        "verify",
+        "specificity",
+        "firstprinciples",
+        "contrastmode"
+      ]
+    },
+    "testing": {
+      "status": "untested",
+      "evidence": [],
+      "note": "Draft product interpretation only. No model execution, human effectiveness review, or comparative testing performed."
+    },
+    "category": "Review & check"
+  },
+  {
+    "schema_version": "1.0.0",
+    "id": "specificity",
+    "version": "0.2.0",
+    "name": "Specificity",
+    "status": "draft",
+    "origin": "sabrina_derived",
+    "category": "Write & clarify",
+    "source": {
+      "catalog_record": "catalog/sabrina/commands/specificity-1.0.0.json",
+      "primary_source": "https://www.sabrina.dev/p/secret-codes-for-chatgpt",
+      "note": "Product-authored adaptation; name describes the function. Source record retained for provenance."
+    },
+    "product_interpretation": "Turn vague advice into concrete actions.",
+    "changes": "Adds explicit actions, prerequisites and completion criteria.",
+    "preserves": "Existing facts and constraints; missing details stay labeled as unknown.",
+    "inputs": {
+      "required": [
+        "material"
+      ],
+      "optional": [
+        "constraints",
+        "audience"
+      ]
+    },
+    "expanded_instruction": "Make the working material concrete and actionable. Replace vague recommendations with specific actions supported by the supplied information. For each action identify the target, prerequisites and observable completion criterion where known. Never invent people, files, tools, deadlines or evidence. State missing details explicitly and ask only the essential questions needed to resolve them. Preserve meaning, uncertainty and constraints. Return the clarified material.",
+    "stack": {
+      "role": "transform",
+      "consumes": "working_material",
+      "output": "transformed_material",
+      "compatible_with": [
+        "eli10",
+        "human",
+        "redteam",
+        "verify",
+        "audit",
+        "firstprinciples",
+        "contrastmode"
+      ]
+    },
+    "testing": {
+      "status": "untested",
+      "evidence": [],
+      "note": "New adaptation; no effectiveness claim."
+    }
+  },
+  {
+    "schema_version": "1.0.0",
+    "id": "firstprinciples",
+    "version": "0.2.0",
+    "name": "First Principles",
+    "status": "draft",
+    "origin": "sabrina_derived",
+    "category": "Think & decide",
+    "source": {
+      "catalog_record": "catalog/sabrina/commands/firstprinciples-1.0.0.json",
+      "primary_source": "https://www.sabrina.dev/p/secret-codes-for-chatgpt",
+      "note": "Product-authored adaptation; name describes the function. Source record retained for provenance."
+    },
+    "product_interpretation": "Break a problem into fundamentals and examine its assumptions.",
+    "changes": "Adds a structured reasoning report and possible approaches.",
+    "preserves": "The original material, supplied facts and unresolved uncertainty.",
+    "inputs": {
+      "required": [
+        "material"
+      ],
+      "optional": [
+        "constraints",
+        "evidence",
+        "criteria"
+      ]
+    },
+    "expanded_instruction": "Analyze the working material from fundamentals. Separate supplied facts, constraints, assumptions and unknowns. Identify which assumptions are essential and which could be tested or removed. Derive plausible approaches from the facts and constraints, explaining tradeoffs and a practical next test. Do not treat model inferences as established facts or claim external verification. Return a separate analysis report without rewriting the material.",
+    "stack": {
+      "role": "review",
+      "consumes": "working_material",
+      "output": "review_report",
+      "compatible_with": [
+        "eli10",
+        "human",
+        "redteam",
+        "verify",
+        "audit",
+        "specificity",
+        "contrastmode"
+      ]
+    },
+    "testing": {
+      "status": "untested",
+      "evidence": [],
+      "note": "New adaptation; no effectiveness claim."
+    }
+  },
+  {
+    "schema_version": "1.0.0",
+    "id": "contrastmode",
+    "version": "0.2.0",
+    "name": "Compare",
+    "status": "draft",
+    "origin": "sabrina_derived",
+    "category": "Think & decide",
+    "source": {
+      "catalog_record": "catalog/sabrina/commands/contrastmode-1.0.0.json",
+      "primary_source": "https://www.sabrina.dev/p/secret-codes-for-chatgpt",
+      "note": "Product-authored adaptation; name describes the function. Source record retained for provenance."
+    },
+    "product_interpretation": "Compare alternatives using consistent criteria.",
+    "changes": "Adds a comparison with tradeoffs and evidence gaps.",
+    "preserves": "Original material and distinctions between facts and assumptions.",
+    "inputs": {
+      "required": [
+        "material"
+      ],
+      "optional": [
+        "criteria",
+        "constraints",
+        "evidence",
+        "as_of_date"
+      ]
+    },
+    "expanded_instruction": "Compare the alternatives described in the working material using supplied criteria or clearly labeled proposed criteria. Use the same dimensions for each option, identify tradeoffs, missing evidence and conditions that would change the decision. Do not fabricate options, specifications, prices or supporting sources. If fewer than two alternatives are supplied, state what is missing rather than inventing a comparison. Give a conditional recommendation only when the evidence supports it. Return a separate comparison report.",
+    "stack": {
+      "role": "review",
+      "consumes": "working_material",
+      "output": "review_report",
+      "compatible_with": [
+        "eli10",
+        "human",
+        "redteam",
+        "verify",
+        "audit",
+        "specificity",
+        "firstprinciples"
+      ]
+    },
+    "testing": {
+      "status": "untested",
+      "evidence": [],
+      "note": "New adaptation; no effectiveness claim."
+    }
+  },
+  {
+    "schema_version": "1.0.0",
+    "id": "guidedquestions",
+    "version": "0.2.0",
+    "name": "Guided Questions",
+    "status": "draft",
+    "origin": "sabrina_derived",
+    "category": "Learn & practice",
+    "source": {
+      "catalog_record": "catalog/sabrina/commands/socrates-1.0.0.json",
+      "primary_source": "https://www.sabrina.dev/p/secret-codes-for-chatgpt",
+      "note": "Product-authored adaptation; name describes the function. Source record retained for provenance."
+    },
+    "product_interpretation": "Explore a topic through one thoughtful question at a time.",
+    "changes": "Starts a guided learning conversation in your AI tool.",
+    "preserves": "Supplied context, learning goal and uncertainty.",
+    "inputs": {
+      "required": [
+        "material"
+      ],
+      "optional": [
+        "audience",
+        "constraints"
+      ]
+    },
+    "expanded_instruction": "Act as a question-led tutor using the working material and supplied learning goal. Ask one focused question, then stop and wait for the learner. After each answer, give brief grounded feedback and ask one follow-up that builds understanding. Adapt difficulty to demonstrated understanding. Do not answer your own question, generate the entire dialogue or pretend the learner has responded. Correct misunderstandings without inventing facts. If the topic is ambiguous, your first question should clarify it.",
+    "stack": {
+      "role": "interactive",
+      "consumes": "working_material",
+      "output": "conversation_turn",
+      "compatible_with": []
+    },
+    "testing": {
+      "status": "untested",
+      "evidence": [],
+      "note": "New adaptation; no effectiveness claim."
+    }
+  },
+  {
+    "schema_version": "1.0.0",
+    "id": "quizme",
+    "version": "0.2.0",
+    "name": "Quiz Me",
+    "status": "draft",
+    "origin": "sabrina_derived",
+    "category": "Learn & practice",
+    "source": {
+      "catalog_record": "catalog/sabrina/commands/quizme-1.0.0.json",
+      "primary_source": "https://www.sabrina.dev/p/secret-codes-for-chatgpt",
+      "note": "Product-authored adaptation; name describes the function. Source record retained for provenance."
+    },
+    "product_interpretation": "Practice a subject with adaptive, single-question quizzes.",
+    "changes": "Starts an interactive practice session in your AI tool.",
+    "preserves": "The supplied study material and its evidence limitations.",
+    "inputs": {
+      "required": [
+        "material"
+      ],
+      "optional": [
+        "audience",
+        "constraints"
+      ]
+    },
+    "expanded_instruction": "Quiz the learner on the supplied working material. Start with one question and wait for an answer without revealing the solution. After the learner responds, assess it against the material, briefly explain any correction, then ask one next question. Adjust difficulty based on actual responses. Distinguish errors in the source from learner errors and flag uncertain source claims. Never invent learner answers, quiz results or mastery scores. Continue one question at a time until the learner asks to stop.",
+    "stack": {
+      "role": "interactive",
+      "consumes": "working_material",
+      "output": "conversation_turn",
+      "compatible_with": []
+    },
+    "testing": {
+      "status": "untested",
+      "evidence": [],
+      "note": "New adaptation; no effectiveness claim."
+    }
+  }
+]

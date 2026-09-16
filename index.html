@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Choose a command, add your material, and build a complete prompt to use in another AI tool.">
+  <title>AI Command Center by Moonshot Consulting</title>
+  <link rel="icon" href="data:,"><link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.mjs"></script>
+</head>
+<body>
+<a class="skip" href="#goal">Skip to goal</a>
+<header class="topbar"><img class="moonshot-logo" src="./assets/moonshot-logo.png" alt="Moonshot Consulting" width="1920" height="480"><div class="brand"><span>AI Command Center</span><span class="brand-credit">by Moonshot Consulting</span></div><span class="local-tag">BUILD · PREVIEW · COPY</span></header>
+<main>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow"><span></span> A better starting point for AI work</p>
+        <h1>Turn a rough idea into a prompt with a point of view.</h1>
+        <p class="hero-lede">Choose your approach, add your material, and take a complete prompt to another AI tool.</p>
+        <div class="hero-actions">
+          <button class="button button-dark" id="hero-example">Try the guided example <span>↗</span></button>
+          <a class="text-link" href="#goal-heading">Start from scratch <span>↓</span></a>
+        </div>
+        <div class="proof-row" aria-label="Product highlights">
+          <div><strong>10</strong><span>focused commands</span></div>
+          <div><strong>0</strong><span>AI calls made here</span></div>
+          <div><strong>5</strong><span>steps per workflow</span></div>
+        </div>
+      </div>
+      <div class="hero-orbit" aria-label="How Prompt Studio works">
+        <div class="orbit-glow"></div>
+        <div class="orbit-card orbit-card-main">
+          <div class="orbit-card-top"><span class="mini-label">THE FLOW</span><span class="spark">✦</span></div>
+          <div class="flow-step active"><b>01</b><span><strong>Choose a move</strong><small>Clarify, challenge, verify or explain.</small></span><em>✓</em></div>
+          <div class="flow-line"></div>
+          <div class="flow-step"><b>02</b><span><strong>Add your material</strong><small>Bring the messy, useful context.</small></span><em>→</em></div>
+          <div class="flow-line"></div>
+          <div class="flow-step"><b>03</b><span><strong>Copy the full prompt</strong><small>Take it to the AI tool you trust.</small></span><em>→</em></div>
+          <div class="orbit-footer"><span class="avatar">MC</span><span>Built for thoughtful work</span><span class="footer-arrow">↗</span></div>
+        </div>
+        <div class="orbit-note note-one">Make it useful <span>✳</span></div>
+        <div class="orbit-note note-two"><span>◌</span> Keep the nuance</div>
+      </div>
+    </section>
+  <div class="intro"><div><p class="eyebrow">YOUR PROMPT WORKSPACE</p><h2 class="workspace-title">Make it your own.</h2><p>Choose your approach. Add your material. Take the complete prompt to another AI tool.</p></div><a class="jump" href="#preview-heading">Go to preview <span aria-hidden="true">↗</span></a></div>
+  <p id="load-status" role="status">Loading the ten commands…</p>
+  <noscript><p class="error">Enable JavaScript to use this local prompt builder. No information is sent to an AI service.</p></noscript>
+  <div class="workspace" id="workspace" hidden>
+    <div class="editor">
+      <section class="panel" aria-labelledby="workspace-tools"><h2 id="workspace-tools">Get started</h2>
+        <div class="tool-actions"><button id="try-example">Try an example</button><button id="start-over">Start over</button></div>
+        <p class="hint">Refreshing clears this draft. Saved workflows stay in this browser. Use Start over for a clean workspace.</p>
+        <p id="workspace-status" role="status" aria-live="polite"></p>
+      </section>
+      <section class="panel" aria-labelledby="goal-heading"><h2 id="goal-heading"><span class="step-number">01</span> Start with your goal<button type="button" class="help-toggle" aria-label="Help: Your goal" aria-expanded="false" aria-controls="help-goal-heading">?</button></h2><p id="help-goal-heading" class="help-panel" hidden>Describe the result you want. Example: “Make this project update clearer for a nontechnical manager.” This is optional; it adds context, but does not choose commands for you.</p>
+        <label for="goal">What would a useful result look like? <span class="optional">Optional</span></label>
+        <textarea id="goal" rows="2" placeholder="I want to make this update clearer for my team." aria-describedby="goal-help"></textarea>
+        <p class="hint" id="goal-help">Your goal adds context. You choose every command yourself.</p>
+      </section>
+      <section class="panel" aria-labelledby="commands-heading"><h2 id="commands-heading"><span class="step-number">02</span> Choose your commands<button type="button" class="help-toggle" aria-label="Help: Choosing commands" aria-expanded="false" aria-controls="help-commands-heading">?</button></h2><p id="help-commands-heading" class="help-panel" hidden>A command is a set of instructions for your AI tool. Click Add to select one. Start with one command; combine compatible commands when you need multiple steps. Search or browse by purpose to narrow the list.</p>
+        <label for="search">Find a command</label><input id="search" type="search" placeholder="Search a name or outcome, like natural, explain, or evidence" autocomplete="off">
+        <label for="category">Browse by purpose</label><select id="category"><option value="">All commands</option><option>Write &amp; clarify</option><option>Think &amp; decide</option><option>Review &amp; check</option><option>Learn &amp; practice</option></select>
+        <p class="hint">Guided Questions and Quiz Me work on their own. Copy their prompt into your AI tool to start the conversation.</p>
+        <p id="search-count" class="hint" role="status"></p><div id="command-list" class="command-grid"></div>
+      </section>
+      <section class="panel" aria-labelledby="material-heading"><h2 id="material-heading"><span class="step-number">03</span> Add your material<button type="button" class="help-toggle" aria-label="Help: Working material" aria-expanded="false" aria-controls="help-material-heading">?</button></h2><p id="help-material-heading" class="help-panel" hidden>Paste the text, proposal or topic you want the AI to work on. Example: a project update for /human, or study notes for Quiz Me. Evidence and review criteria appear only when relevant. A link alone is not verified evidence.</p>
+        <label for="material">Working material <span class="required">Required</span></label>
+        <textarea id="material" rows="7" placeholder="Paste the text, idea, proposal, or claims you want to work with." required aria-describedby="material-help validation"></textarea>
+        <p id="material-help" class="hint">Your inputs stay in this browser tab. Reloading clears them.</p>
+        <div id="context-wrap" hidden><h3>A little more context <span class="optional">Optional</span></h3><div id="context-fields"></div></div>
+      </section>
+    </div>
+    <aside class="output" aria-label="Your workflow and prompt">
+      <section class="panel stack-panel" aria-labelledby="stack-heading"><div class="section-top"><h2 id="stack-heading">Selected commands<button type="button" class="help-toggle" aria-label="Help: Selected commands" aria-expanded="false" aria-controls="help-stack-heading">?</button></h2><span id="step-count" class="count">0 / 5</span></div><p id="help-stack-heading" class="help-panel" hidden>This is your workflow, not an editable text box. Add commands from the library, move them with the arrows, or remove them. Guided Questions and Quiz Me work alone. Saving remembers the commands and their order only.</p>
+        <p class="hint">Add commands from the library. Use the arrows to change their order. This section is not a text field.</p>
+        <ol id="stack-list"></ol><p id="stack-empty" class="empty">Add a command to start. Nothing is selected for you.</p>
+        <p class="flow-key"><strong>Transform</strong> rewrites the working material.<br><strong>Review</strong> adds a report and keeps that material intact.</p>
+        <div id="flow-wrap" hidden><h3>What happens in this order</h3><ol id="flow-list" class="flow-list"></ol></div>
+        <p id="stack-status" class="hint" role="status" aria-live="polite"></p>
+      </section>
+      <section class="panel" aria-labelledby="saved-heading"><h2 id="saved-heading">Saved workflows</h2>
+        <p class="hint">Save command choices and order for next time. Material, goal and context are never saved. Available only in this browser on this site; clearing browser storage removes them.</p>
+        <label for="workflow-name">Workflow name</label><input id="workflow-name" maxlength="80" placeholder="For example: Rewrite and check">
+        <button id="save-workflow">Save selected commands</button>
+        <label for="saved-workflows">Choose a saved workflow</label><select id="saved-workflows"><option value="">No saved workflows</option></select>
+        <div class="tool-actions"><button id="load-workflow" disabled>Load workflow</button><button id="delete-workflow" disabled>Delete workflow</button></div>
+        <p id="workflow-status" role="status" aria-live="polite"></p>
+      </section>
+      <section class="panel preview-panel" aria-labelledby="preview-heading"><div class="section-top"><h2 id="preview-heading">Your complete prompt<button type="button" class="help-toggle" aria-label="Help: Your complete prompt" aria-expanded="false" aria-controls="help-preview-heading">?</button></h2><span class="preview-tag">PREVIEW</span></div><p id="help-preview-heading" class="help-panel" hidden>Review the assembled instructions, then click Copy complete prompt. Paste into your chosen AI tool and send it. Change the fields on this page to change the preview. The app does not run the prompt.</p>
+        <p class="hint">This preview updates automatically and cannot be edited here. Copy it, paste into your AI tool, and send it there. No model has run.</p>
+        <p id="validation" class="validation" role="status">Choose a command and add working material.</p>
+        <label class="sr-only" for="preview">Complete prompt preview</label><textarea id="preview" readonly rows="15" placeholder="Your prompt will appear here as you build it." spellcheck="false"></textarea>
+        <div class="copy-row"><span id="character-count" class="hint">0 characters</span><button id="copy" class="primary" disabled>Copy complete prompt</button></div>
+        <p id="copy-status" role="status" aria-live="polite" class="copy-status"></p>
+      </section>
+    </aside>
+  </div>
+  <footer><strong>A prompt builder, not an AI service.</strong> These shortcuts are not official ChatGPT commands. The app assembles instructions; it does not run an AI model or verify claims. Results depend on the AI tool and evidence you use.</footer>
+</main>
+</body>
+</html>
