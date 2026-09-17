@@ -3,21 +3,21 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Choose a command, add your material, and build a complete prompt to use in another AI tool.">
-  <title>AI Command Center by Moonshot Consulting</title>
+  <title>JigBench — Your AI command center</title>
   <link rel="icon" href="data:,"><link rel="stylesheet" href="./styles.css">
   <script type="module" src="./app.mjs"></script>
 </head>
 <body>
 <a class="skip" href="#goal">Skip to goal</a>
-<header class="topbar"><img class="moonshot-logo" src="./assets/moonshot-logo.png" alt="Moonshot Consulting" width="1920" height="480"><div class="brand"><span>AI Command Center</span><span class="brand-credit">by Moonshot Consulting</span></div><span class="local-tag">BUILD · PREVIEW · COPY</span></header>
+<header class="topbar"><img class="moonshot-logo" src="./assets/moonshot-logo.png" alt="Moonshot Consulting" width="1920" height="480"><div class="brand"><span>JigBench</span><span class="brand-credit">Your AI command center</span><span class="brand-credit">by Moonshot Consulting</span></div><span class="local-tag">BUILD · PREVIEW · COPY</span></header>
 <main>
     <section class="hero" aria-labelledby="hero-title">
       <div class="hero-copy">
         <p class="eyebrow"><span></span> A better starting point for AI work</p>
-        <h1>Turn a rough idea into a prompt with a point of view.</h1>
-        <p class="hero-lede">Choose your approach, add your material, and take a complete prompt to another AI tool.</p>
+        <h1 id="hero-title">Better prompts start here.</h1>
+        <p class="hero-lede">Choose your tools. Bring your ideas. Build a prompt worth running.</p>
         <div class="hero-actions">
-          <button class="button button-dark" id="hero-example">Try the guided example <span>↗</span></button>
+          <button class="button button-dark" id="hero-example">Try a sample build <span>↗</span></button>
           <a class="text-link" href="#goal-heading">Start from scratch <span>↓</span></a>
         </div>
         <div class="proof-row" aria-label="Product highlights">
@@ -26,7 +26,7 @@
           <div><strong>5</strong><span>steps per workflow</span></div>
         </div>
       </div>
-      <div class="hero-orbit" aria-label="How Prompt Studio works">
+      <div class="hero-orbit" aria-label="How JigBench works">
         <div class="orbit-glow"></div>
         <div class="orbit-card orbit-card-main">
           <div class="orbit-card-top"><span class="mini-label">THE FLOW</span><span class="spark">✦</span></div>
@@ -41,13 +41,13 @@
         <div class="orbit-note note-two"><span>◌</span> Keep the nuance</div>
       </div>
     </section>
-  <div class="intro"><div><p class="eyebrow">YOUR PROMPT WORKSPACE</p><h2 class="workspace-title">Make it your own.</h2><p>Choose your approach. Add your material. Take the complete prompt to another AI tool.</p></div><a class="jump" href="#preview-heading">Go to preview <span aria-hidden="true">↗</span></a></div>
+  <div class="intro"><div><p class="eyebrow">YOUR WORKBENCH</p><h2 class="workspace-title">Make it your own.</h2><p>Choose your approach. Add your material. Take the complete prompt to another AI tool.</p></div><a class="jump" href="#preview-heading">Go to preview <span aria-hidden="true">↗</span></a></div>
   <p id="load-status" role="status">Loading the ten commands…</p>
   <noscript><p class="error">Enable JavaScript to use this local prompt builder. No information is sent to an AI service.</p></noscript>
   <div class="workspace" id="workspace" hidden>
     <div class="editor">
       <section class="panel" aria-labelledby="workspace-tools"><h2 id="workspace-tools">Get started</h2>
-        <div class="tool-actions"><button id="try-example">Try an example</button><button id="start-over">Start over</button></div>
+        <div class="tool-actions"><button id="try-example">Try a sample build</button><button id="start-over">Start over</button></div>
         <p class="hint">Refreshing clears this draft. Saved workflows stay in this browser. Use Start over for a clean workspace.</p>
         <p id="workspace-status" role="status" aria-live="polite"></p>
       </section>
