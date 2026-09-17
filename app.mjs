@@ -210,7 +210,7 @@ $('copy').addEventListener('click', async () => {
   copying = true; $('copy').disabled = true;
   try {
     const copied = await copyPreview($('preview'), navigator.clipboard?.writeText?.bind(navigator.clipboard));
-    $('copy-status').textContent = copied === $('preview').value ? 'Copied. Paste this prompt into your chosen AI tool.' : 'The previous preview was copied. Copy again for your latest changes.';
+    $('copy-status').textContent = copied === $('preview').value ? 'Copied. Ready for your AI tool—paste your prompt there to get started.' : 'The previous preview was copied. Copy again for your latest changes.';
     $('copy-status').classList.remove('error');
   } catch {
     $('copy-status').textContent = 'Copy failed. Select the preview and use your keyboard’s copy shortcut.';
