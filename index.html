@@ -19,7 +19,7 @@
   <meta name="twitter:title" content="JigBench — Your workbench for reusable AI prompts">
   <meta name="twitter:description" content="Choose commands. Add your context. Copy a prompt worth running. No account or API key required.">
   <meta name="twitter:image" content="https://jigbench.com/assets/social-preview.png"><link rel="stylesheet" href="./styles.css">
-  <script type="module" src="./app.mjs"></script>
+  <script type="module" src="./app.mjs?v=20260920"></script>
 </head>
 <body>
 <a class="skip" href="#goal">Skip to goal</a>
@@ -99,11 +99,11 @@
         <div class="tool-actions"><button id="load-workflow" disabled>Load workflow</button><button id="delete-workflow" disabled>Delete workflow</button></div>
         <p id="workflow-status" role="status" aria-live="polite"></p>
       </section>
-      <section class="panel preview-panel" aria-labelledby="preview-heading"><div class="section-top"><h2 id="preview-heading">Your complete prompt<button type="button" class="help-toggle" aria-label="Help: Your complete prompt" aria-expanded="false" aria-controls="help-preview-heading">?</button></h2><span class="preview-tag">PREVIEW</span></div><p id="help-preview-heading" class="help-panel" hidden>Review the assembled instructions, then click Copy complete prompt. Paste into your chosen AI tool and send it. Change the fields on this page to change the preview. The app does not run the prompt.</p>
+      <section class="panel preview-panel" aria-labelledby="preview-heading"><div class="section-top"><h2 id="preview-heading">Your complete prompt<button type="button" class="help-toggle" aria-label="Help: Your complete prompt" aria-expanded="false" aria-controls="help-preview-heading">?</button></h2><span class="preview-tag">PREVIEW</span></div><p id="help-preview-heading" class="help-panel" hidden>Review the assembled instructions, then copy it or download it as a plain-text file. Paste into your chosen AI tool and send it. Change the fields on this page to change the preview. The app does not run the prompt.</p>
         <p class="hint">This preview updates automatically and cannot be edited here. Copy it, paste into your AI tool, and send it there. No model has run.</p>
         <p id="validation" class="validation" role="status">Choose a command and add working material.</p>
         <label class="sr-only" for="preview">Complete prompt preview</label><textarea id="preview" readonly rows="15" placeholder="Your prompt will appear here as you build it." spellcheck="false"></textarea>
-        <div class="copy-row"><span id="character-count" class="hint">0 characters</span><button id="copy" class="primary" disabled>Copy complete prompt</button></div>
+        <div class="copy-row"><span id="character-count" class="hint">0 characters</span><button id="download" disabled>Download prompt (.txt)</button><button id="copy" class="primary" disabled>Copy complete prompt</button></div>
         <p id="copy-status" role="status" aria-live="polite" class="copy-status"></p>
       </section>
     </aside>

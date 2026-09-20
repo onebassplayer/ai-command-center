@@ -122,18 +122,20 @@ function updatePreview() {
   $('copy-status').textContent = ''; $('copy-status').classList.remove('error');
   try {
     const prompt = compilePrompt({commands: state.commands, policy: state.policy, ids: state.ids, material: $('material').value, goal: $('goal').value, context: state.context});
-    // This readonly field is the single source of truth for copying.
+    // This readonly field is the single source of truth for copying and downloading.
     $('preview').value = prompt;
     $('validation').textContent = 'Ready to copy. Review the full prompt below.';
     $('validation').classList.add('ready');
     $('material').setAttribute('aria-invalid', 'false');
     $('copy').disabled = copying;
+    if ($('download')) $('download').disabled = false;
   } catch (error) {
     $('preview').value = '';
     $('validation').textContent = error.message;
     $('validation').classList.remove('ready');
     $('material').setAttribute('aria-invalid', String(state.ids.length > 0 && !$('material').value.trim()));
     $('copy').disabled = true;
+    if ($('download')) $('download').disabled = true;
   }
   $('character-count').textContent = `${$('preview').value.length.toLocaleString()} characters`;
 }
@@ -206,6 +208,28 @@ $('search').addEventListener('input', renderCommands);
 $('category').addEventListener('change', renderCommands);
 $('goal').addEventListener('input', updatePreview);
 $('material').addEventListener('input', updatePreview);
+$('download')?.addEventListener('click', () => {
+  const prompt = $('preview').value;
+  if (!prompt) return;
+  let url;
+  const link = document.createElement('a');
+  try {
+    url = URL.createObjectURL(new Blob([prompt], {type: 'text/plain;charset=utf-8'}));
+    link.href = url;
+    link.download = 'jigbench-prompt.txt';
+    document.body.append(link);
+    link.click();
+    $('copy-status').textContent = 'Download requested: jigbench-prompt.txt. The file contains the complete preview.';
+    $('copy-status').classList.remove('error');
+  } catch {
+    $('copy-status').textContent = 'Download could not start. Use Copy complete prompt or copy the preview manually.';
+    $('copy-status').classList.add('error');
+  } finally {
+    link.remove();
+    // Allow the browser time to consume the download before releasing its URL.
+    if (url) setTimeout(() => URL.revokeObjectURL(url), 60000);
+  }
+});
 $('copy').addEventListener('click', async () => {
   copying = true; $('copy').disabled = true;
   try {
