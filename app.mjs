@@ -1,4 +1,4 @@
-import {recipe, readRecipes, writeRecipes} from './workflows.mjs';
+import {recipe, readRecipes, writeRecipes} from './workflows.mjs?v=workflow-notes-1';
 import {loadResources, addStep, moveStep, validateStack, relevantFields, retainRelevantContext, searchCommands, dataFlow, compilePrompt, copyPreview} from './compiler.mjs';
 
 const $ = id => document.getElementById(id);
@@ -141,6 +141,15 @@ function updatePreview() {
 }
 function renderSelection() { renderCommands(); renderStack(); renderContext(); updatePreview(); }
 
+const noteKeys = ['task', 'worked', 'nextTime'];
+function workflowNotes() { return Object.fromEntries(noteKeys.map(k => [k, $('workflow-'+k).value])); }
+function showWorkflowSummary() {
+  const value = $('saved-workflows').value;
+  const r = value === '' ? null : saved[Number(value)];
+  const titles = {task: 'Used for', worked: 'What worked', nextTime: 'Next time'};
+  $('saved-summary').hidden = !r;
+  $('saved-summary').textContent = r ? noteKeys.filter(k => r.notes?.[k]).map(k => titles[k]+': '+r.notes[k]).join('\n') || 'No notes saved yet.' : '';
+}
 let saved = [];
 let savingAvailable = true;
 function workflowStatus(message, error=false) {
@@ -150,12 +159,12 @@ function workflowStatus(message, error=false) {
 function showSaved() {
   $('saved-workflows').replaceChildren(new Option(saved.length ? 'Choose a workflow' : 'No saved workflows',''));
   saved.forEach((r,i)=>$('saved-workflows').append(new Option(r.name,String(i))));
-  $('load-workflow').disabled=true; $('delete-workflow').disabled=true;
+  $('load-workflow').disabled=true; $('delete-workflow').disabled=true; showWorkflowSummary();
 }
-function hasDraft() { return state.ids.length || $('material').value || $('goal').value || Object.values(state.context).some(Boolean); }
+function hasDraft() { return Object.values(workflowNotes()).some(Boolean) || state.ids.length || $('material').value || $('goal').value || Object.values(state.context).some(Boolean); }
 function resetDraft() {
   state.ids=[]; state.context={};
-  for (const id of ['material','goal','search','category','workflow-name']) $(id).value='';
+  for (const id of ['material','goal','search','category','workflow-name',...noteKeys.map(k=>'workflow-'+k)]) $(id).value='';
   renderSelection(); announce('');
 }
 for (const button of document.querySelectorAll('.help-toggle')) {
@@ -166,11 +175,11 @@ for (const button of document.querySelectorAll('.help-toggle')) {
   });
 }
 $('start-over').addEventListener('click',()=>{
-  if (hasDraft() && !window.confirm('Clear your current commands, goal, material and context? Saved workflows will remain.')) return;
+  if (hasDraft() && !window.confirm('Clear your current commands, goal, material, context and unsaved workflow notes? Saved workflows will remain.')) return;
   resetDraft(); $('workspace-status').textContent='Workspace cleared. Saved workflows are unchanged.'; $('goal').focus();
 });
 $('try-example').addEventListener('click',()=>{
-  if (hasDraft() && !window.confirm('Replace this draft with a fictional example? Unsaved inputs will be cleared.')) return;
+  if (hasDraft() && !window.confirm('Replace this draft with a fictional example? Unsaved inputs and workflow notes will be cleared.')) return;
   resetDraft(); state.ids=['specificity'];
   $('goal').value='Make this proposal actionable without inventing missing details.';
   $('material').value='We should replace customer onboarding calls with an automated checklist. We have not tested it or asked customers for feedback.';
@@ -179,22 +188,22 @@ $('try-example').addEventListener('click',()=>{
 $('save-workflow').addEventListener('click',()=>{
   if (!savingAvailable) return;
   try {
-    const r=recipe($('workflow-name').value,state.ids,state.commands);
+    const r=recipe($('workflow-name').value,state.ids,state.commands,workflowNotes());
     const existing=saved.findIndex(x=>x.name.toLowerCase()===r.name.toLowerCase());
     if (existing>=0 && !window.confirm('Replace the saved workflow “'+saved[existing].name+'”?')) return;
     const next=[...saved]; if(existing>=0) next[existing]=r; else next.push(r);
     saved=writeRecipes(window.localStorage,next,state.commands); showSaved();
-    workflowStatus('Saved “'+r.name+'”. Only command choices and order were saved.');
+    workflowStatus('Saved “'+r.name+'”. Commands, order and optional notes were saved. Working material, goal and context were not saved.');
   } catch(error) { workflowStatus('Could not save: '+error.message,true); }
 });
 $('saved-workflows').addEventListener('change',()=>{
   const empty=$('saved-workflows').value==='';
-  $('load-workflow').disabled=empty; $('delete-workflow').disabled=empty;
+  $('load-workflow').disabled=empty; $('delete-workflow').disabled=empty; showWorkflowSummary();
 });
 $('load-workflow').addEventListener('click',()=>{
   const r=saved[Number($('saved-workflows').value)]; if (!r) return;
-  if (hasDraft() && !window.confirm('Load “'+r.name+'” with fresh inputs? Your current material, goal and context will be cleared.')) return;
-  resetDraft(); state.ids=r.steps.map(s=>s.id); $('workflow-name').value=r.name; renderSelection();
+  if (hasDraft() && !window.confirm('Load “'+r.name+'” with fresh inputs? Your current material, goal, context and unsaved workflow notes will be cleared.')) return;
+  resetDraft(); state.ids=r.steps.map(s=>s.id); $('workflow-name').value=r.name; noteKeys.forEach(k => $('workflow-'+k).value=r.notes?.[k]??''); renderSelection();
   workflowStatus('Loaded “'+r.name+'”. Add fresh material and context.'); $('material').focus();
 });
 $('delete-workflow').addEventListener('click',()=>{

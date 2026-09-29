@@ -19,7 +19,7 @@
   <meta name="twitter:title" content="JigBench — Your workbench for reusable AI prompts">
   <meta name="twitter:description" content="Choose commands. Add your context. Copy a prompt worth running. No account or API key required.">
   <meta name="twitter:image" content="https://jigbench.com/assets/social-preview.png"><link rel="stylesheet" href="./styles.css">
-  <script type="module" src="./app.mjs?v=20260920"></script>
+  <script type="module" src="./app.mjs?v=workflow-notes-1"></script>
 </head>
 <body>
 <a class="skip" href="#goal">Skip to goal</a>
@@ -84,7 +84,7 @@
       </section>
     </div>
     <aside class="output" aria-label="Your workflow and prompt">
-      <section class="panel stack-panel" aria-labelledby="stack-heading"><div class="section-top"><h2 id="stack-heading">Selected commands<button type="button" class="help-toggle" aria-label="Help: Selected commands" aria-expanded="false" aria-controls="help-stack-heading">?</button></h2><span id="step-count" class="count">0 / 5</span></div><p id="help-stack-heading" class="help-panel" hidden>This is your workflow, not an editable text box. Add commands from the library, move them with the arrows, or remove them. Guided Questions and Quiz Me work alone. Saving remembers the commands and their order only.</p>
+      <section class="panel stack-panel" aria-labelledby="stack-heading"><div class="section-top"><h2 id="stack-heading">Selected commands<button type="button" class="help-toggle" aria-label="Help: Selected commands" aria-expanded="false" aria-controls="help-stack-heading">?</button></h2><span id="step-count" class="count">0 / 5</span></div><p id="help-stack-heading" class="help-panel" hidden>This is your workflow, not an editable text box. Add commands from the library, move them with the arrows, or remove them. Guided Questions and Quiz Me work alone. Saving remembers commands, order and any optional workflow notes you enter.</p>
         <p class="hint">Add commands from the library. Use the arrows to change their order. This section is not a text field.</p>
         <ol id="stack-list"></ol><p id="stack-empty" class="empty">Add a command to start. Nothing is selected for you.</p>
         <p class="flow-key"><strong>Transform</strong> rewrites the working material.<br><strong>Review</strong> adds a report and keeps that material intact.</p>
@@ -92,10 +92,15 @@
         <p id="stack-status" class="hint" role="status" aria-live="polite"></p>
       </section>
       <section class="panel" aria-labelledby="saved-heading"><h2 id="saved-heading">Saved workflows</h2>
-        <p class="hint">Save command choices and order for next time. Material, goal and context are never saved. Available only in this browser on this site; clearing browser storage removes them.</p>
+        <p class="hint">Save command choices, order and the optional notes below. Working material, goal and context fields are not saved. Notes are saved only when you click Save workflow. Available only in this browser on this site; clearing browser storage removes them.</p>
         <label for="workflow-name">Workflow name</label><input id="workflow-name" maxlength="80" placeholder="For example: Rewrite and check">
-        <button id="save-workflow">Save selected commands</button>
+        <label for="workflow-task">Used for <span class="optional">Optional</span></label><textarea id="workflow-task" rows="2" maxlength="1000" placeholder="Follow-up email after a prospect meeting."></textarea>
+        <label for="workflow-worked">What worked <span class="optional">Optional</span></label><textarea id="workflow-worked" rows="2" maxlength="1000" placeholder="Produced a concise draft with one clear next step."></textarea>
+        <label for="workflow-nextTime">What to change next time <span class="optional">Optional</span></label><textarea id="workflow-nextTime" rows="2" maxlength="1000" placeholder="Use a warmer opening."></textarea>
+        <p class="hint">After trying the prompt in your AI tool, add your own notes here and save. Notes help you remember the result; they are not included in the prompt.</p>
+        <button id="save-workflow">Save workflow</button>
         <label for="saved-workflows">Choose a saved workflow</label><select id="saved-workflows"><option value="">No saved workflows</option></select>
+        <p id="saved-summary" class="hint" style="white-space:pre-wrap" hidden></p>
         <div class="tool-actions"><button id="load-workflow" disabled>Load workflow</button><button id="delete-workflow" disabled>Delete workflow</button></div>
         <p id="workflow-status" role="status" aria-live="polite"></p>
       </section>
