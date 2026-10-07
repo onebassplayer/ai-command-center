@@ -20,6 +20,7 @@
   <meta name="twitter:description" content="Choose commands. Add your context. Copy a prompt worth running. No account or API key required.">
   <meta name="twitter:image" content="https://jigbench.com/assets/social-preview.png"><link rel="stylesheet" href="./styles.css">
   <script type="module" src="./app.mjs?v=workflow-notes-1"></script>
+  <link rel="stylesheet" href="/analytics.css"><script src="/analytics.js" defer></script>
 </head>
 <body>
 <a class="skip" href="#goal">Skip to goal</a>
@@ -115,5 +116,11 @@
   </div>
   <footer><strong>A prompt builder, not an AI service.</strong> These shortcuts are not official ChatGPT commands. The app assembles instructions; it does not run an AI model or verify claims. Results depend on the AI tool and evidence you use.</footer>
 </main>
+<div class="analytics-controls"><button type="button" id="analytics-manage">Analytics preferences</button></div>
+<aside id="analytics-choice" class="analytics-choice" aria-label="Analytics preferences" hidden>
+<p><strong>Help us understand what’s useful.</strong><br>May we use Google Analytics to measure visits and traffic sources? Your choice won’t affect the tool.</p>
+<div class="analytics-actions"><button type="button" id="analytics-accept">Accept analytics</button><button type="button" id="analytics-decline">Essential only</button></div>
+<details><summary>What we measure</summary><p>With your permission, Google receives page visits, traffic sources, browser/device information and approximate location. Analytics cookies recognize returning browsers. We do not send your interview answers, prompts, pasted material or email address. Advertising features and automatic form tracking are off. Change your choice anytime using Analytics preferences. Declining stops future measurement in this browser; it does not erase earlier reports. <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Google’s privacy policy</a>. Questions: <a href="mailto:david@moonshotconsultingdc.com">david@moonshotconsultingdc.com</a>.</p></details>
+</aside>
 </body>
 </html>
