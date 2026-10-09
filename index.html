@@ -20,6 +20,7 @@
   <meta name="twitter:description" content="Choose commands. Add your context. Copy a prompt worth running. No account or API key required.">
   <meta name="twitter:image" content="https://jigbench.com/assets/social-preview.png"><link rel="stylesheet" href="./styles.css">
   <script type="module" src="./app.mjs?v=workflow-notes-1"></script>
+  <script type="module" src="./explainer.mjs?v=explainer-1"></script>
   <link rel="stylesheet" href="/analytics.css"><script src="/analytics.js" defer></script>
 </head>
 <body>
@@ -33,6 +34,7 @@
         <p class="hero-lede">Choose commands. Add your context. Copy a prompt worth running.</p>
         <div class="hero-actions">
           <button class="button button-dark" id="hero-example">Try a sample build <span>↗</span></button>
+          <a class="button button-watch" id="watch-explainer" href="./assets/jigbench-explainer.mp4" aria-haspopup="dialog" aria-controls="explainer-dialog"><span class="watch-icon" aria-hidden="true">▶</span> Watch the explainer <span class="watch-duration">1 min</span></a>
           <a class="text-link" href="#goal-heading">Start from scratch <span>↓</span></a>
         </div>
         <div class="proof-row" aria-label="Product highlights">
@@ -116,6 +118,19 @@
   </div>
   <footer><strong>A prompt builder, not an AI service.</strong> These shortcuts are not official ChatGPT commands. The app assembles instructions; it does not run an AI model or verify claims. Results depend on the AI tool and evidence you use.</footer>
 </main>
+<dialog class="explainer-dialog" id="explainer-dialog" aria-labelledby="explainer-title" aria-describedby="explainer-description">
+  <div class="explainer-content">
+    <div class="explainer-heading">
+      <div><h2 id="explainer-title">See JigBench in action</h2><p id="explainer-description">Turn a challenging request into a complete prompt in about a minute.</p></div>
+      <button type="button" class="explainer-close" id="explainer-close" aria-label="Close explainer" autofocus><span aria-hidden="true">×</span></button>
+    </div>
+    <video id="explainer-video" class="explainer-video" controls playsinline preload="none" poster="./assets/jigbench-explainer-poster.jpg" width="1920" height="1080" aria-label="JigBench explainer">
+      <source src="./assets/jigbench-explainer.mp4" type="video/mp4">
+      <p><a href="./assets/jigbench-explainer.mp4">Watch the JigBench explainer</a>.</p>
+    </video>
+    <p class="explainer-fallback"><a href="./assets/jigbench-explainer.mp4" target="_blank" rel="noopener">Open video in a new tab <span aria-hidden="true">↗</span></a></p>
+  </div>
+</dialog>
 <div class="analytics-controls"><button type="button" id="analytics-manage">Analytics preferences</button></div>
 <aside id="analytics-choice" class="analytics-choice" aria-label="Analytics preferences" hidden>
 <p><strong>Help us understand what’s useful.</strong><br>May we use Google Analytics to measure visits and traffic sources? Your choice won’t affect the tool.</p>
