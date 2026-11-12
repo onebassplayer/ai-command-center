@@ -13,19 +13,22 @@ function run({hostname = 'jigbench.com', pathname = '/', saved} = {}) {
   const nodes = Object.fromEntries(['analytics-choice', 'analytics-manage', 'analytics-accept', 'analytics-decline'].map(id => [id, el(id)]));
   const store = new Map(saved ? [['moonshot-traffic-consent-v1', JSON.stringify(saved)]] : []);
   const window = {};
+  const cookieWrites = [];
   const context = {
     window, URL, URLSearchParams, Date, JSON,
     location: {hostname, pathname, search: '?utm_source=x&email=a@b.c'},
     localStorage: {getItem: k => store.get(k) ?? null, setItem: (k, v) => store.set(k, v)},
     document: {
-      referrer: '', cookie: '',
+      referrer: '',
+      get cookie() { return '_ga=GA1.1.1; _ga_Z1NRNC8MV7=GS1; other=1'; },
+      set cookie(v) { cookieWrites.push(v); },
       getElementById: id => nodes[id],
       createElement: () => ({}),
       head: {append: s => appended.push(s)}
     }
   };
   vm.runInNewContext(source, context);
-  return {appended, nodes, listeners, window, store};
+  return {appended, nodes, listeners, window, store, cookieWrites};
 }
 
 test('no gtag script before a choice; the panel is shown', () => {
@@ -64,4 +67,14 @@ test('other hosts and paths never load analytics', () => {
     const r = run({...opts, saved: {value: 'accepted', expires: Date.now() + 1e6}});
     assert.equal(r.appended.length, 0);
   }
+});
+
+test('declining clears existing _ga cookies and leaves other cookies alone', () => {
+  const r = run();
+  r.listeners['analytics-decline']();
+  const cleared = r.cookieWrites.map(w => w.split('=')[0]);
+  assert.ok(cleared.includes('_ga') && cleared.includes('_ga_Z1NRNC8MV7'));
+  assert.ok(!cleared.includes('other'));
+  assert.ok(r.cookieWrites.every(w => w.includes('Max-Age=0')));
+  assert.equal(r.window['ga-disable-G-Z1NRNC8MV7'], true);
 });
