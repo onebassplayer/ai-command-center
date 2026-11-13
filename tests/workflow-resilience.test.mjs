@@ -51,9 +51,23 @@ test('hidden workflows never carry material or context back into storage', () =>
 });
 
 test('corrupt storage still fails closed without changing storage', () => {
-  for (const bad of ['not json', '{}', JSON.stringify([{name: 'x'}]), JSON.stringify([null]), JSON.stringify(Array(51).fill(good))]) {
+  for (const bad of ['not json', '{}', JSON.stringify([null]), JSON.stringify([[1]]), JSON.stringify(Array(51).fill(good))]) {
     const s = memoryStorage(bad);
     assert.throws(() => readSavedWorkflows(s, commands));
     assert.equal(s.getItem(STORAGE_KEY), bad);
   }
+});
+
+test('odd entries are hidden, not fatal, and keep their notes in full', () => {
+  const longNote = 'n'.repeat(1500);
+  const odd = [{name: 'No steps'}, {name: 'Number version', steps: [{id: 'eli10', version: 1}]}, {name: '', steps: good.steps}, {name: 'Long', notes: {task: longNote}, steps: [{id: 'eli10', version: '0.0.1'}]}];
+  const s = memoryStorage(JSON.stringify([good, ...odd]));
+  const {usable, unavailable} = readSavedWorkflows(s, commands);
+  assert.deepEqual(usable, [good]);
+  assert.equal(unavailable.length, 4);
+  writeRecipes(s, usable, commands, unavailable);
+  const stored = JSON.parse(s.getItem(STORAGE_KEY));
+  assert.equal(stored.length, 5);
+  assert.equal(stored[4].notes.task.length, 1500);
+  assert.deepEqual(stored[2].steps, [{id: 'eli10', version: 1}]);
 });

@@ -190,6 +190,7 @@ $('save-workflow').addEventListener('click',()=>{
   if (!savingAvailable) return;
   try {
     const r=recipe($('workflow-name').value,state.ids,state.commands,workflowNotes());
+    if (unavailableSaved.some(x=>String(x.name??'').toLowerCase()===r.name.toLowerCase())) throw new Error('a hidden saved workflow already uses that name. Choose another name.');
     const existing=saved.findIndex(x=>x.name.toLowerCase()===r.name.toLowerCase());
     if (existing>=0 && !window.confirm('Replace the saved workflow “'+saved[existing].name+'”?')) return;
     const next=[...saved]; if(existing>=0) next[existing]=r; else next.push(r);
@@ -257,7 +258,7 @@ try {
   $('workspace').hidden = false; $('load-status').hidden = true; renderSelection();
   try {
     ({usable: saved, unavailable: unavailableSaved} = readSavedWorkflows(window.localStorage,state.commands)); showSaved();
-    if (unavailableSaved.length) workflowStatus(unavailableSaved.length+(unavailableSaved.length===1?' saved workflow uses':' saved workflows use')+' commands that changed since it was saved, so it is hidden. It stays in this browser’s storage. Your other workflows work normally.');
+    if (unavailableSaved.length) workflowStatus(unavailableSaved.length+(unavailableSaved.length===1?' saved workflow could not be loaded':' saved workflows could not be loaded')+', usually because a command changed since it was saved. Hidden workflows stay in this browser’s storage. Your other workflows work normally.');
   }
   catch { savingAvailable=false; $('save-workflow').disabled=true; workflowStatus('Saved workflows are unavailable in this browser, or contain incompatible data. Your existing storage has not been changed. You can still build and copy prompts.',true); }
 } catch (error) {

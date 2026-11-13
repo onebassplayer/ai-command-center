@@ -32,8 +32,9 @@ export function readSavedWorkflows(storage, commands) {
   if (!Array.isArray(data) || data.length > 50) throw new Error('Saved workflows could not be read.');
   const usable = [], unavailable = [];
   for (const r of data) {
-    if (!r || typeof r !== 'object' || !Array.isArray(r.steps) || r.steps.some(s => !s || typeof s.id !== 'string' || typeof s.version !== 'string')) throw new Error('Saved workflows could not be read.');
+    if (!r || typeof r !== 'object' || Array.isArray(r)) throw new Error('Saved workflows could not be read.');
     try {
+      if (!Array.isArray(r.steps) || r.steps.some(s => !s || typeof s !== 'object')) throw new Error('malformed');
       if (r.steps.some(s => commands.find(c=>c.id===s.id)?.version !== s.version)) throw new Error('stale');
       usable.push(recipe(r.name, r.steps.map(s=>s.id), commands, r.notes));
     } catch {
@@ -43,12 +44,15 @@ export function readSavedWorkflows(storage, commands) {
   return {usable, unavailable};
 }
 function keepUnavailable(r) {
-  const kept = {name: String(r.name ?? '').slice(0, 80), steps: r.steps.slice(0, 5).map(s => ({id: s.id.slice(0, 80), version: s.version.slice(0, 40)}))};
+  // Allowlisted fields only, values copied as stored (no truncation), so notes survive.
+  const steps = Array.isArray(r.steps) ? r.steps.filter(s => s && typeof s === 'object').map(s => ({id: s.id, version: s.version})) : [];
+  const kept = {name: r.name, steps};
   const notes = {};
-  for (const key of ['task', 'worked', 'nextTime']) if (typeof r.notes?.[key] === 'string') notes[key] = r.notes[key].slice(0, 1000);
+  for (const key of ['task', 'worked', 'nextTime']) if (typeof r.notes?.[key] === 'string') notes[key] = r.notes[key];
   return Object.keys(notes).length ? {notes, ...kept} : kept;
 }
 export function writeRecipes(storage, recipes, commands, unavailable = []) {
+  unavailable = unavailable.filter(r => r && typeof r === 'object');
   if (recipes.length + unavailable.length > 50) throw new Error('You can save up to 50 workflows. Delete one first.');
   // Rebuild from an allowlist: working material and context can never be persisted.
   const clean = recipes.map(r=>recipe(r.name,r.steps.map(s=>s.id),commands,r.notes));
