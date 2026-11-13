@@ -1,4 +1,4 @@
-import {recipe, readRecipes, writeRecipes} from './workflows.mjs?v=workflow-notes-1';
+import {recipe, readSavedWorkflows, writeRecipes} from './workflows.mjs?v=workflow-resilience-1';
 import {loadResources, addStep, moveStep, validateStack, relevantFields, retainRelevantContext, searchCommands, dataFlow, compilePrompt, copyPreview} from './compiler.mjs';
 
 const $ = id => document.getElementById(id);
@@ -151,6 +151,7 @@ function showWorkflowSummary() {
   $('saved-summary').textContent = r ? noteKeys.filter(k => r.notes?.[k]).map(k => titles[k]+': '+r.notes[k]).join('\n') || 'No notes saved yet.' : '';
 }
 let saved = [];
+let unavailableSaved = [];
 let savingAvailable = true;
 function workflowStatus(message, error=false) {
   $('workflow-status').textContent=message;
@@ -192,7 +193,7 @@ $('save-workflow').addEventListener('click',()=>{
     const existing=saved.findIndex(x=>x.name.toLowerCase()===r.name.toLowerCase());
     if (existing>=0 && !window.confirm('Replace the saved workflow “'+saved[existing].name+'”?')) return;
     const next=[...saved]; if(existing>=0) next[existing]=r; else next.push(r);
-    saved=writeRecipes(window.localStorage,next,state.commands); showSaved();
+    saved=writeRecipes(window.localStorage,next,state.commands,unavailableSaved); showSaved();
     workflowStatus('Saved “'+r.name+'”. Commands, order and optional notes were saved. Working material, goal and context were not saved.');
   } catch(error) { workflowStatus('Could not save: '+error.message,true); }
 });
@@ -209,7 +210,7 @@ $('load-workflow').addEventListener('click',()=>{
 $('delete-workflow').addEventListener('click',()=>{
   const index=Number($('saved-workflows').value); const r=saved[index]; if (!r) return;
   if (!window.confirm('Delete saved workflow “'+r.name+'”? Your current draft will stay.')) return;
-  try { saved=writeRecipes(window.localStorage,saved.filter((_,i)=>i!==index),state.commands); showSaved(); workflowStatus('Workflow deleted.'); }
+  try { saved=writeRecipes(window.localStorage,saved.filter((_,i)=>i!==index),state.commands,unavailableSaved); showSaved(); workflowStatus('Workflow deleted.'); }
   catch(error) { workflowStatus('Could not delete: '+error.message,true); }
 });
 
@@ -254,7 +255,10 @@ try {
   const resources = await loadResources(window.fetch.bind(window));
   state.commands = resources.commands; state.policy = resources.policy;
   $('workspace').hidden = false; $('load-status').hidden = true; renderSelection();
-  try { saved=readRecipes(window.localStorage,state.commands); showSaved(); }
+  try {
+    ({usable: saved, unavailable: unavailableSaved} = readSavedWorkflows(window.localStorage,state.commands)); showSaved();
+    if (unavailableSaved.length) workflowStatus(unavailableSaved.length+(unavailableSaved.length===1?' saved workflow uses':' saved workflows use')+' commands that changed since it was saved, so it is hidden. It stays in this browser’s storage. Your other workflows work normally.');
+  }
   catch { savingAvailable=false; $('save-workflow').disabled=true; workflowStatus('Saved workflows are unavailable in this browser, or contain incompatible data. Your existing storage has not been changed. You can still build and copy prompts.',true); }
 } catch (error) {
   $('load-status').textContent = `${error.message} Reload this page to try again.`;
