@@ -1,7 +1,7 @@
 // Browser check for the "Download prompt (.txt)" button (app.mjs download handler).
 // Run: node --test tests/browser/
 // Needs Playwright with Chromium. Skips cleanly when Playwright is not installed,
-// so the dependency-free suite (node --test tests/*.test.mjs) is unaffected.
+// Lives in tests/browser/ so a dependency-free tests/*.test.mjs glob never picks it up.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createServer} from 'node:http';
@@ -44,10 +44,17 @@ async function openApp(t, initScript) {
   return {page, errors};
 }
 
-test('download is disabled until the prompt is valid', {skip}, async t => {
+test('download is disabled on empty state and a forced click downloads nothing', {skip}, async t => {
   const {page, errors} = await openApp(t);
   assert.equal(await page.isDisabled('#download'), true);
   assert.equal(await page.inputValue('#preview'), '');
+  let downloaded = false;
+  page.on('download', () => { downloaded = true; });
+  // Bypass the disabled attribute to exercise the empty-prompt guard in the handler.
+  await page.evaluate(() => document.getElementById('download').dispatchEvent(new MouseEvent('click')));
+  await page.waitForTimeout(300);
+  assert.equal(downloaded, false);
+  assert.equal(await page.textContent('#copy-status'), '');
   assert.deepEqual(errors, []);
 });
 
