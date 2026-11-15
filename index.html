@@ -19,7 +19,7 @@
   <meta name="twitter:title" content="JigBench — Your workbench for reusable AI prompts">
   <meta name="twitter:description" content="Choose commands. Add your context. Copy a prompt worth running. No account or API key required.">
   <meta name="twitter:image" content="https://jigbench.com/assets/social-preview.png"><link rel="stylesheet" href="./styles.css?v=explainer-1">
-  <script type="module" src="./app.mjs?v=workflow-resilience-1"></script>
+  <script type="module" src="./app.mjs?v=workflow-resilience-2"></script>
   <script type="module" src="./explainer.mjs?v=explainer-1"></script>
   <link rel="stylesheet" href="/analytics.css"><script src="/analytics.js" defer></script>
 </head>
@@ -104,7 +104,7 @@
         <button id="save-workflow">Save workflow</button>
         <label for="saved-workflows">Choose a saved workflow</label><select id="saved-workflows"><option value="">No saved workflows</option></select>
         <p id="saved-summary" class="hint" style="white-space:pre-wrap" hidden></p>
-        <div class="tool-actions"><button id="load-workflow" disabled>Load workflow</button><button id="delete-workflow" disabled>Delete workflow</button></div>
+        <div class="tool-actions"><button id="load-workflow" disabled>Load workflow</button><button id="delete-workflow" disabled>Delete workflow</button><button id="remove-hidden-workflows" hidden>Remove hidden workflows</button></div>
         <p id="workflow-status" role="status" aria-live="polite"></p>
       </section>
       <section class="panel preview-panel" aria-labelledby="preview-heading"><div class="section-top"><h2 id="preview-heading">Your complete prompt<button type="button" class="help-toggle" aria-label="Help: Your complete prompt" aria-expanded="false" aria-controls="help-preview-heading">?</button></h2><span class="preview-tag">PREVIEW</span></div><p id="help-preview-heading" class="help-panel" hidden>Review the assembled instructions, then copy it or download it as a plain-text file. Paste into your chosen AI tool and send it. Change the fields on this page to change the preview. The app does not run the prompt.</p>
