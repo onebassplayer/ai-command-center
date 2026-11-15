@@ -212,7 +212,7 @@ $('load-workflow').addEventListener('click',()=>{
 $('remove-hidden-workflows').addEventListener('click',()=>{
   const n=unavailableSaved.length; if (!n || !savingAvailable) return;
   if (!window.confirm('Permanently remove '+n+(n===1?' hidden saved workflow':' hidden saved workflows')+' that can no longer be loaded? Your other saved workflows and your current draft will stay.')) return;
-  try { saved=writeRecipes(window.localStorage,saved,state.commands,[]); unavailableSaved=[]; showSaved(); workflowStatus('Removed '+n+(n===1?' hidden workflow.':' hidden workflows.')+' Your other saved workflows were kept.'); }
+  try { saved=writeRecipes(window.localStorage,saved,state.commands,[]); unavailableSaved=[]; showSaved(); $('saved-workflows').focus(); workflowStatus('Removed '+n+(n===1?' hidden workflow.':' hidden workflows.')+' Your other saved workflows were kept.'); }
   catch(error) { workflowStatus('Could not remove hidden workflows: '+error.message,true); }
 });
 $('delete-workflow').addEventListener('click',()=>{

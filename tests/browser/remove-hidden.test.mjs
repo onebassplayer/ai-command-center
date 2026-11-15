@@ -80,6 +80,7 @@ test('cancel keeps storage; confirm removes only hidden workflows and survives r
   assert.equal(stored[0].notes.task, 'keep me');
   assert.equal(await page.isVisible('#remove-hidden-workflows'), false);
   assert.match(await page.textContent('#workflow-status'), /Removed 2 hidden workflows/);
+  assert.equal(await page.evaluate(() => document.activeElement?.id), 'saved-workflows', 'focus is not dropped to the page body');
   assert.deepEqual(await page.$$eval('#saved-workflows option', o => o.map(x => x.textContent)), ['Choose a workflow', 'Good']);
 
   await page.reload();
