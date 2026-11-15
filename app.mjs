@@ -161,6 +161,7 @@ function showSaved() {
   $('saved-workflows').replaceChildren(new Option(saved.length ? 'Choose a workflow' : 'No saved workflows',''));
   saved.forEach((r,i)=>$('saved-workflows').append(new Option(r.name,String(i))));
   $('load-workflow').disabled=true; $('delete-workflow').disabled=true; showWorkflowSummary();
+  $('remove-hidden-workflows').hidden=!unavailableSaved.length;
 }
 function hasDraft() { return Object.values(workflowNotes()).some(Boolean) || state.ids.length || $('material').value || $('goal').value || Object.values(state.context).some(Boolean); }
 function resetDraft() {
@@ -207,6 +208,12 @@ $('load-workflow').addEventListener('click',()=>{
   if (hasDraft() && !window.confirm('Load “'+r.name+'” with fresh inputs? Your current material, goal, context and unsaved workflow notes will be cleared.')) return;
   resetDraft(); state.ids=r.steps.map(s=>s.id); $('workflow-name').value=r.name; noteKeys.forEach(k => $('workflow-'+k).value=r.notes?.[k]??''); renderSelection();
   workflowStatus('Loaded “'+r.name+'”. Add fresh material and context.'); $('material').focus();
+});
+$('remove-hidden-workflows').addEventListener('click',()=>{
+  const n=unavailableSaved.length; if (!n || !savingAvailable) return;
+  if (!window.confirm('Permanently remove '+n+(n===1?' hidden saved workflow':' hidden saved workflows')+' that can no longer be loaded? Your other saved workflows and your current draft will stay.')) return;
+  try { saved=writeRecipes(window.localStorage,saved,state.commands,[]); unavailableSaved=[]; showSaved(); $('saved-workflows').focus(); workflowStatus('Removed '+n+(n===1?' hidden workflow.':' hidden workflows.')+' Your other saved workflows were kept.'); }
+  catch(error) { workflowStatus('Could not remove hidden workflows: '+error.message,true); }
 });
 $('delete-workflow').addEventListener('click',()=>{
   const index=Number($('saved-workflows').value); const r=saved[index]; if (!r) return;
@@ -258,7 +265,7 @@ try {
   $('workspace').hidden = false; $('load-status').hidden = true; renderSelection();
   try {
     ({usable: saved, unavailable: unavailableSaved} = readSavedWorkflows(window.localStorage,state.commands)); showSaved();
-    if (unavailableSaved.length) workflowStatus(unavailableSaved.length+(unavailableSaved.length===1?' saved workflow could not be loaded':' saved workflows could not be loaded')+', usually because a command changed since it was saved. Hidden workflows stay in this browser’s storage. Your other workflows work normally.');
+    if (unavailableSaved.length) workflowStatus(unavailableSaved.length+(unavailableSaved.length===1?' saved workflow could not be loaded':' saved workflows could not be loaded')+', usually because a command changed since it was saved. Hidden workflows stay in this browser’s storage until you choose Remove hidden workflows. Your other workflows work normally.');
   }
   catch { savingAvailable=false; $('save-workflow').disabled=true; workflowStatus('Saved workflows are unavailable in this browser, or contain incompatible data. Your existing storage has not been changed. You can still build and copy prompts.',true); }
 } catch (error) {
