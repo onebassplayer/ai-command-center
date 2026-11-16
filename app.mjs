@@ -1,4 +1,4 @@
-import {recipe, readSavedWorkflows, writeRecipes} from './workflows.mjs?v=workflow-resilience-1';
+import {STORAGE_KEY, recipe, readSavedWorkflows, writeRecipes} from './workflows.mjs?v=workflow-resilience-1';
 import {loadResources, addStep, moveStep, validateStack, relevantFields, retainRelevantContext, searchCommands, dataFlow, compilePrompt, copyPreview} from './compiler.mjs';
 
 const $ = id => document.getElementById(id);
@@ -163,6 +163,12 @@ function showSaved() {
   $('load-workflow').disabled=true; $('delete-workflow').disabled=true; showWorkflowSummary();
   $('remove-hidden-workflows').hidden=!unavailableSaved.length;
 }
+// Re-read storage right before every write so a save, delete or removal made in
+// another tab is not silently overwritten by this tab's older copy of the list.
+function refreshSaved() {
+  try { ({usable: saved, unavailable: unavailableSaved} = readSavedWorkflows(window.localStorage,state.commands)); return true; }
+  catch { workflowStatus('Saved workflows changed in another tab and could not be read. Nothing was changed. Reload this page to continue.',true); return false; }
+}
 function hasDraft() { return Object.values(workflowNotes()).some(Boolean) || state.ids.length || $('material').value || $('goal').value || Object.values(state.context).some(Boolean); }
 function resetDraft() {
   state.ids=[]; state.context={};
@@ -191,10 +197,15 @@ $('save-workflow').addEventListener('click',()=>{
   if (!savingAvailable) return;
   try {
     const r=recipe($('workflow-name').value,state.ids,state.commands,workflowNotes());
-    if (unavailableSaved.some(x=>String(x.name??'').toLowerCase()===r.name.toLowerCase())) throw new Error('a hidden saved workflow already uses that name. Choose another name.');
-    const existing=saved.findIndex(x=>x.name.toLowerCase()===r.name.toLowerCase());
+    const key=r.name.toLowerCase();
+    if (!refreshSaved()) return;
+    if (unavailableSaved.some(x=>String(x.name??'').toLowerCase()===key)) throw new Error('a hidden saved workflow already uses that name. Choose another name.');
+    const existing=saved.findIndex(x=>x.name.toLowerCase()===key);
     if (existing>=0 && !window.confirm('Replace the saved workflow “'+saved[existing].name+'”?')) return;
-    const next=[...saved]; if(existing>=0) next[existing]=r; else next.push(r);
+    if (!refreshSaved()) return;
+    if (unavailableSaved.some(x=>String(x.name??'').toLowerCase()===key)) throw new Error('a hidden saved workflow already uses that name. Choose another name.');
+    const at=saved.findIndex(x=>x.name.toLowerCase()===key);
+    const next=[...saved]; if(at>=0) next[at]=r; else next.push(r);
     saved=writeRecipes(window.localStorage,next,state.commands,unavailableSaved); showSaved();
     workflowStatus('Saved “'+r.name+'”. Commands, order and optional notes were saved. Working material, goal and context were not saved.');
   } catch(error) { workflowStatus('Could not save: '+error.message,true); }
@@ -212,13 +223,23 @@ $('load-workflow').addEventListener('click',()=>{
 $('remove-hidden-workflows').addEventListener('click',()=>{
   const n=unavailableSaved.length; if (!n || !savingAvailable) return;
   if (!window.confirm('Permanently remove '+n+(n===1?' hidden saved workflow':' hidden saved workflows')+' that can no longer be loaded? Your other saved workflows and your current draft will stay.')) return;
-  try { saved=writeRecipes(window.localStorage,saved,state.commands,[]); unavailableSaved=[]; showSaved(); $('saved-workflows').focus(); workflowStatus('Removed '+n+(n===1?' hidden workflow.':' hidden workflows.')+' Your other saved workflows were kept.'); }
+  try {
+    if (!refreshSaved()) return;
+    const removed=unavailableSaved.length;
+    saved=writeRecipes(window.localStorage,saved,state.commands,[]); unavailableSaved=[]; showSaved(); $('saved-workflows').focus();
+    workflowStatus('Removed '+removed+(removed===1?' hidden workflow.':' hidden workflows.')+' Your other saved workflows were kept.');
+  }
   catch(error) { workflowStatus('Could not remove hidden workflows: '+error.message,true); }
 });
 $('delete-workflow').addEventListener('click',()=>{
   const index=Number($('saved-workflows').value); const r=saved[index]; if (!r) return;
   if (!window.confirm('Delete saved workflow “'+r.name+'”? Your current draft will stay.')) return;
-  try { saved=writeRecipes(window.localStorage,saved.filter((_,i)=>i!==index),state.commands,unavailableSaved); showSaved(); workflowStatus('Workflow deleted.'); }
+  try {
+    if (!refreshSaved()) return;
+    const key=r.name.toLowerCase();
+    if (!saved.some(x=>x.name.toLowerCase()===key)) { showSaved(); workflowStatus('“'+r.name+'” was already deleted in another tab. Your other saved workflows were kept.'); return; }
+    saved=writeRecipes(window.localStorage,saved.filter(x=>x.name.toLowerCase()!==key),state.commands,unavailableSaved); showSaved(); workflowStatus('Workflow deleted.');
+  }
   catch(error) { workflowStatus('Could not delete: '+error.message,true); }
 });
 
@@ -268,6 +289,11 @@ try {
     if (unavailableSaved.length) workflowStatus(unavailableSaved.length+(unavailableSaved.length===1?' saved workflow could not be loaded':' saved workflows could not be loaded')+', usually because a command changed since it was saved. Hidden workflows stay in this browser’s storage until you choose Remove hidden workflows. Your other workflows work normally.');
   }
   catch { savingAvailable=false; $('save-workflow').disabled=true; workflowStatus('Saved workflows are unavailable in this browser, or contain incompatible data. Your existing storage has not been changed. You can still build and copy prompts.',true); }
+  // Keep the list current when another tab saves, deletes or removes workflows.
+  window.addEventListener('storage',event=>{
+    if (!savingAvailable || (event.key!==null && event.key!==STORAGE_KEY)) return;
+    if (refreshSaved()) showSaved();
+  });
 } catch (error) {
   $('load-status').textContent = `${error.message} Reload this page to try again.`;
   $('load-status').classList.add('error');
