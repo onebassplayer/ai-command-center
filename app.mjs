@@ -226,6 +226,7 @@ $('remove-hidden-workflows').addEventListener('click',()=>{
   try {
     if (!refreshSaved()) return;
     const removed=unavailableSaved.length;
+    if (!removed) { showSaved(); workflowStatus('Hidden workflows were already removed in another tab. Your other saved workflows were kept.'); return; }
     saved=writeRecipes(window.localStorage,saved,state.commands,[]); unavailableSaved=[]; showSaved(); $('saved-workflows').focus();
     workflowStatus('Removed '+removed+(removed===1?' hidden workflow.':' hidden workflows.')+' Your other saved workflows were kept.');
   }
@@ -236,9 +237,10 @@ $('delete-workflow').addEventListener('click',()=>{
   if (!window.confirm('Delete saved workflow “'+r.name+'”? Your current draft will stay.')) return;
   try {
     if (!refreshSaved()) return;
-    const key=r.name.toLowerCase();
-    if (!saved.some(x=>x.name.toLowerCase()===key)) { showSaved(); workflowStatus('“'+r.name+'” was already deleted in another tab. Your other saved workflows were kept.'); return; }
-    saved=writeRecipes(window.localStorage,saved.filter(x=>x.name.toLowerCase()!==key),state.commands,unavailableSaved); showSaved(); workflowStatus('Workflow deleted.');
+    // Exact name, so older data holding both "Plan" and "plan" loses only the one chosen.
+    const at=saved.findIndex(x=>x.name===r.name);
+    if (at<0) { showSaved(); workflowStatus('“'+r.name+'” was already deleted in another tab. Your other saved workflows were kept.'); return; }
+    saved=writeRecipes(window.localStorage,saved.filter((_,i)=>i!==at),state.commands,unavailableSaved); showSaved(); workflowStatus('Workflow deleted.');
   }
   catch(error) { workflowStatus('Could not delete: '+error.message,true); }
 });

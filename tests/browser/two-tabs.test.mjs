@@ -135,3 +135,23 @@ test('corrupt storage written by another tab blocks the write instead of overwri
   assert.match(await a.textContent('#workflow-status'), /changed in another tab and could not be read/);
   assert.deepEqual(errors, []);
 });
+
+test('delete removes only the exact name when older data has names differing by case', {skip}, async t => {
+  const v = await currentVersion('eli10');
+  const {a, errors} = await openTabs(t, seed([{name: 'Plan', steps: [{id: 'eli10', version: v}]}, {name: 'plan', steps: [{id: 'eli10', version: v}]}]));
+  await remove(a, 'plan');
+  assert.deepEqual(await names(a), ['Plan']);
+  assert.deepEqual(errors, []);
+});
+
+test('remove hidden after another tab already removed them writes nothing', {skip}, async t => {
+  const stale = {name: 'Stale', steps: [{id: 'eli10', version: '0.0.0-old'}]};
+  const {a, b, errors} = await openTabs(t, seed([stale]), {staleA: true});
+  await b.click('#remove-hidden-workflows');
+  const before = await b.evaluate(k => localStorage.getItem(k), KEY);
+  await a.click('#remove-hidden-workflows');
+  assert.equal(await a.evaluate(k => localStorage.getItem(k), KEY), before);
+  assert.match(await a.textContent('#workflow-status'), /already removed in another tab/);
+  assert.equal(await a.isVisible('#remove-hidden-workflows'), false);
+  assert.deepEqual(errors, []);
+});
